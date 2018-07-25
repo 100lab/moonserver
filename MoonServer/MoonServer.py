@@ -31,20 +31,31 @@ def api_get_tops():
     
     print(words)
 
-    data = {}
+    data = []
+    
     for word in words:
-        print(word)
+        word_element = {}
+        
         bcount = r.get(parse.quote(word))
         count = bcount.decode("utf-8")
         count = int(count)
-        print(count)        
-        data[word] = count
+
+        word_mean = "mean_" + parse.quote(word)
+        bmean = r.get(word_mean)
+        mean = bmean.decode("utf-8")
+
+        print(word + "[" + str(count) + "] : " + mean)
+
+        word_element['name'] = word
+        word_element['count'] = count
+        word_element['desc'] = mean
+        data.append(word_element)
+
     
     print(data)
 
     js = json.dumps(data)
     resp = Response(js, status=200, mimetype='application/json')
-    resp.headers['Link'] = 'http://www.mooncle.com'
 
     return resp
 
